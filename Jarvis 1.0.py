@@ -30,7 +30,7 @@ def listen():
     audio = recognizer.listen(source)# listen source graba el audio del micrófono
     #Procesar el audio y convertirlo a texto
     try:
-        commmand = recognizer.recognize_google(audio, language="es-Es")# Envia el audio a google y recive texto
+        command = recognizer.recognize_google(audio, language="es-ES")#traduce el audio a texto 
         print(f"Dijiste: {command}")
         return command.lower()# Counvierte el texto a minusculas para facilitar el analisis
     #Manejo de errores
@@ -62,7 +62,7 @@ def handel_command(command):
         elif "buscar" in command:
             topic = command.replace("buscar", "").strip()
             try:
-                summary =wikipedia.summary(topic, sentences=2, auto_suggest=false)
+                summary =wikipedia.summary(topic, sentences=2, auto_suggest=False)
                 speak(f"Esto encontré sobre {topic}: {summary}")
             except Exception:
                 speak("No pude encontrar informacion sobre este tema.")
