@@ -1,6 +1,6 @@
 #Inicio programa Jarvis 1.0
  
-##Día 1 - Preparación 
+#Día 1 - Preparación 
 
 ## Estructura de escuchar voz y conventirla en texto
 ## Usar texto para generar una respuesta hablada 
@@ -41,5 +41,45 @@ def listen():
         speak("Hubo un problema con el sercio de reconocimiento de voz.")
         return ""
     
+#Dia 2 intergracion de interpretacion de comandos 
+#Este modulo es para abrir aplicaciones, buscar en wikipedia 
+#Decir  la hora o el clima 
+#Reproducir musica
+#Saludar segun la hora 
+
+import webbrowser
+import wikipedia
+from datetime import datetime
+from modules.voice import speak
+
+def handel_command(command):
+        """Interpreta y ejecuta comandos basicos"""
+
+        if "hora" in command:
+            now = datetime.now().strftime("%H:%M")# El parentesis da referencia a la hora y los minutos
+            speak(f"La hora actual es {now}")
+
+        elif "buscar" in command:
+            topic = command.replace("buscar", "").strip()
+            try:
+                summary =wikipedia.summary(topic, sentences=2, auto_suggest=false)
+                speak(f"Esto encontré sobre {topic}: {summary}")
+            except Exception:
+                speak("No pude encontrar informacion sobre este tema.")
+
+        elif "abrir apple music" in command:
+            webbrowser.open("https://music.apple.com/") 
+            speak("Abriendo Apple Music.")
+        elif "salir" in command:
+            speak("Hasta luego.")
+            exit()
+        else:
+            speak("No reconozco ese comando aún.")
+
+#Dia 3 Integracion de IA conversacional OpenAI
+
+
+
+
 
     
