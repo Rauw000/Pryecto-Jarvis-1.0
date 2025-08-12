@@ -5,6 +5,31 @@
 ## Estructura de escuchar voz y conventirla en texto
 ## Usar texto para generar una respuesta hablada 
 
+# main.py
+from modules.voice import listen, speak
+from modules.commands import handle_command
+from modules.ai_chat import chat_with_ai
+from modules.memory import remember
+
+def JARVIS():
+    speak("Hola Raúl, soy JARVIS. ¿En que puedo ayudarte hoy?")
+    while True:
+        command = listen()
+        if not command:
+            continue
+        remember("Ultimo comando",command)
+
+        #Si el comando incluye "Jarvis", usa IA
+
+        if "jarvis" in command.lower():
+            chat_whit_ai(command)
+        else:
+            handle_command(command)
+
+if __name__ == "__main__":
+    JARVIS()
+    
+
 import speech_recognition as sr
 import pyttsx3
 
@@ -12,7 +37,7 @@ import pyttsx3
 engine = pyttsx3.init() 
 engine.setProperty('rate', 150)  # Ajustar la velocidad de habla
 
-engine.setProperty('volumen',1.0) # Ajustar el volumen (0.0 a 1.0)
+engine.setProperty('volume',1.0) # Ajustar el volumen (0.0 a 1.0)
 def speak(text):
     """Escucha el microfono y devuelve texto"""
     #Esta funcion hace que Jarvis hable
@@ -26,8 +51,8 @@ def listen():
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
         print("Escuchando...")
-    recognizer.adjust_for_ambient_noise(source)# Ajusta el reconocimiento para ignorar el ruido de fondo
-    audio = recognizer.listen(source)# listen source graba el audio del micrófono
+        recognizer.adjust_for_ambient_noise(source)# Ajusta el reconocimiento para ignorar el ruido de fondo
+        audio = recognizer.listen(source)# listen source graba el audio del micrófono
     #Procesar el audio y convertirlo a texto
     try:
         command = recognizer.recognize_google(audio, language="es-ES")#traduce el audio a texto 
@@ -52,7 +77,7 @@ import wikipedia
 from datetime import datetime
 from modules.voice import speak
 
-def handel_command(command):
+def handle_command(command):
         """Interpreta y ejecuta comandos basicos"""
 
         if "hora" in command:
@@ -87,10 +112,10 @@ def chat_whit_ai(prompt):
     """Envia el texto a OpenAI y devuelve la respuesta"""
     try:
         response =openai.ChatCompletion.create(
-            model="gpt-3,5-turbo",
+            model="gpt-3.5-turbo",
 
             messages=[
-                {"role":"systen","content":"Eres un asistente llamado JARVIS que ayuda a Raul."}, # aca puedes cambiar para que diga a la persona que esta ayudando
+                {"role":"system","content":"Eres un asistente llamado JARVIS que ayuda a Raul."}, # aca puedes cambiar para que diga a la persona que esta ayudando
                 {"role":"user","content":prompt}
             ]
         )
@@ -122,9 +147,8 @@ def remember(key, value):
     memory = load_memory()
     memory[key] = value
     save_memory(memory)
-
 def recall(key):
-    memmory = load_memory()
+    memory = load_memory()
     return memory.get(key, None)
 
 #- Se integró OpenAI para conversación natural
@@ -139,19 +163,19 @@ def recall(key):
 #Dia 4 se realiza una interfaz para Jarvis 
 import tkinter as tk
 from modules.voice import listen, speak 
-from modules.ai.chat import chat_whit_ai
+from modules.ai_chat import chat_with_ai
 
 
 # Esta definicion lo que hace es escuchar a la persona y mandar una respuesta por medio de la ia 
 def start_jarvis():
     user_input = listen()
     if user_input:
-        response = chat_whit_ai(user_input)
+        response = chat_with_ai(user_input)
         chat_log.insert(tk.END, f"Tu: {user_input}\n")
         chat_log.insert(tk.END, f"JARVIS: {response}\n\n")
 
 #Crear ventana 
-window = tk.TK()
+window = tk.Tk()
 window.title("JARVIS - Asistente Personal")
 window.geometry("600x400")
 window.configure(bg="#1e1e1e")
