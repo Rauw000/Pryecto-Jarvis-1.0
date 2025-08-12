@@ -78,8 +78,101 @@ def handel_command(command):
 
 #Dia 3 Integracion de IA conversacional OpenAI
 
+import openai
+from modules.voice import speak
 
+openai.api_key = "API_KEY" #Remplazar por la clave real
 
+def chat_whit_ai(prompt):
+    """Envia el texto a OpenAI y devuelve la respuesta"""
+    try:
+        response =openai.ChatCompletion.create(
+            model="gpt-3,5-turbo",
 
+            messages=[
+                {"role":"systen","content":"Eres un asistente llamado JARVIS que ayuda a Raul."}, # aca puedes cambiar para que diga a la persona que esta ayudando
+                {"role":"user","content":prompt}
+            ]
+        )
+        reply = response.choices[0].message.content
+        speak(reply)
+        return reply
+    except Exception as e:
+        speak("Hubo un error al conectar con la inteligencia artificial.")
+        print(e)
+        return ""
+    
+#Estructura de memoria basica
+import json
+import os
+
+MEMORY_FILE = "assets/memory.json"
+
+def load_memory():
+    if os.path.exists(MEMORY_FILE):
+        with open(MEMORY_FILE,"r") as file:
+            return json.load(file)
+        return{}
+    
+def save_memory(data):
+    with open(MEMORY_FILE, "w") as file:
+        json.dump(data, file, indent=4)
+
+def remember(key, value):
+    memory = load_memory()
+    memory[key] = value
+    save_memory(memory)
+
+def recall(key):
+    memmory = load_memory()
+    return memory.get(key, None)
+
+#- Se integró OpenAI para conversación natural
+#- JARVIS ahora responde preguntas complejas
+#- Se creó un sistema de memoria básica con JSON
+#- Próximo paso: interfaz visual y comandos avanzados
 
     
+
+
+
+#Dia 4 se realiza una interfaz para Jarvis 
+import tkinter as tk
+from modules.voice import listen, speak 
+from modules.ai.chat import chat_whit_ai
+
+
+# Esta definicion lo que hace es escuchar a la persona y mandar una respuesta por medio de la ia 
+def start_jarvis():
+    user_input = listen()
+    if user_input:
+        response = chat_whit_ai(user_input)
+        chat_log.insert(tk.END, f"Tu: {user_input}\n")
+        chat_log.insert(tk.END, f"JARVIS: {response}\n\n")
+
+#Crear ventana 
+window = tk.TK()
+window.title("JARVIS - Asistente Personal")
+window.geometry("600x400")
+window.configure(bg="#1e1e1e")
+
+#Area de texto
+chat_log = tk.Text(window, bg="#2e2e2e", fg="white", font=("console",12))
+chat_log.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+#Boton para hablar 
+talk_button = tk.Button(window, text="Hablar con JARVIS", command=start_jarvis, bg="#007acc", fg="white", font=("Arial", 12))
+talk_button.pack(pady=10)
+
+window.mainloop()
+
+#Se creo una ventana interactiva con "tkinter"
+#JARVIS ahora tiene una cara digital
+# Se integro el botón para hablar y ver respuestas
+
+
+
+
+
+
+
