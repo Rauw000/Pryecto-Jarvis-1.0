@@ -12,17 +12,15 @@ from modules.ai_chat import chat_with_ai
 from modules.memory import remember
 
 def JARVIS():
-    speak("Hola Raúl, soy JARVIS. ¿En que puedo ayudarte hoy?")
+    speak("Hola Raúl, soy JARVIS. ¿En qué puedo ayudarte hoy?")
     while True:
         command = listen()
         if not command:
             continue
-        remember("Ultimo comando",command)
-
-        #Si el comando incluye "Jarvis", usa IA
+        remember("Ultimo comando", command)
 
         if "jarvis" in command.lower():
-            chat_whit_ai(command)
+            chat_with_ai(command)
         else:
             handle_command(command)
 
