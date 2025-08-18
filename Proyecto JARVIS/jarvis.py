@@ -10,6 +10,7 @@ from modules.voice import listen, speak
 from modules.commands import handle_command
 from modules.ai_chat import chat_with_ai
 from modules.memory import remember
+from modules.interface import *  # Esto ejecuta la interfaz visual
 
 def JARVIS():
     speak("Hola Raúl, soy JARVIS. ¿En qué puedo ayudarte hoy?")
@@ -26,7 +27,8 @@ def JARVIS():
 
 if __name__ == "__main__":
     JARVIS()
-    
+
+
 
 
 
